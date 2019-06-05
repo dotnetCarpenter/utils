@@ -1,26 +1,63 @@
 'use strict'
 
 import assert from 'assert'
-
 assert.notOk = (expression, message) => {
   assert.equal(!!expression, message)
 }
+export { assert }
 
-export {assert}
 
+export let log = (function (olog) {
+  const messages = []
+
+  keepMessages.flush = () => {
+    messages.forEach(x => {
+      Array.isArray(x) ? olog(...x) : olog(x)
+    })
+
+    keepMessages.clear()
+  }
+
+  keepMessages.top = (...msg) => {
+    messages.unshift(msg)
+  }
+
+  keepMessages.clear = () => {
+    messages.splice(0)
+  }
+
+  return keepMessages
+
+  function keepMessages (...msg) {
+    messages.push(msg)
+  }
+}(console.log))
+
+
+let exception
+let showError = true
+export const it = describe
 export function describe (description, f) {
   /*
   Supported font symbols on Windows
   https://github.com/microsoft/terminal/issues/387
   */
+  showError = true
+
   try {
     f()
-    console.log('♥', description) // ✓
+    if (exception) throw exception
+    log.top('♥', description) // ✓
+    log.flush()
   } catch (e) {
-    console.error('↓', description) // ⚠
-    console.error(e)
-    // throw e
+    exception = e
+
+    if (showError) {
+      console.error('↓', description) // ⚠
+      console.error(e)
+      showError = false
+    } else {
+      console.warn('↑', description, '- Error(s) was thrown. See above for details.')
+    }
   }
 }
-
-export const it = describe

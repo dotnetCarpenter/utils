@@ -7,7 +7,7 @@
     {
       "type": "bashdb",
       "request": "launch",
-      "name": "Bash-Debug",
+      "name": "Bash-Debug file",
       "cwd": "${workspaceFolder}",
       "program": "${file}",
       "args": []
@@ -15,7 +15,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch file",
+      "name": "Node-Debug file",
       "program": "${file}",
       "runtimeArgs": ["--experimental-modules"],
       "runtimeVersion": "12.3.1",

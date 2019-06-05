@@ -1,9 +1,9 @@
 'use strict'
 
 import identity from '../identity.js'
-import { describe, it, assert } from './test.js'
+import { describe, it, assert, log } from './test.js'
 
-import { Functor, Maybe, Just, Nothing } from '../functors/Functor.class.js'
+import { Functor, Maybe, Just, Nothing } from '../functors/Functor.object.js'
 
 describe('Functors must preserve identity morphisms', () => {
   // fmap id = id
@@ -17,8 +17,10 @@ describe('Functors preserve composition of morphisms', () => {
   const expected = new Maybe(42)
   const add1 = a => a + 1
   const minus2 = a => a - 2
+
   let actual = new Maybe(add1(minus2(43)))
   assert.deepEqual(actual, expected)
+
   actual = new Maybe(43).fmap(add1).fmap(minus2)
   assert.deepEqual(actual, expected)
 })
@@ -31,6 +33,7 @@ describe('Functors have a type', () => {
     // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     // assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
+    printInstanceOf(actual)
   })
 
   it('new Maybe(21)', () => {
@@ -41,3 +44,10 @@ describe('Functors have a type', () => {
     // assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
   })
 })
+
+function printInstanceOf (a) {
+  log(a instanceof Functor, 'a instanceof Functor')
+  log(a instanceof Maybe, 'a instanceof Maybe')
+  log(a instanceof Just, 'a instanceof Just')
+  log(a instanceof Nothing, 'a instanceof Nothing')
+}

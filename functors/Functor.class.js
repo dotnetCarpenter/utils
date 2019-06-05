@@ -6,9 +6,9 @@ export class Functor {
 
 export class Maybe extends Functor {
   constructor (v) {
-    const functor = v instanceof Nothing || null == v ? new Nothing : new Just(v)
-    functor.prototype = Maybe.prototype
-    return functor
+    return v instanceof Nothing || null == v ? new Nothing : new Just(v)
+    // functor.prototype = Maybe.prototype
+    // return functor
   }
 }
 
