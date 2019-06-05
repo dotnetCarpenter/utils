@@ -5,9 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "bashdb",
+      "request": "launch",
+      "name": "Bash-Debug",
+      "cwd": "${workspaceFolder}",
+      "program": "${file}",
+      "args": []
+    },
+    {
       "type": "node",
       "request": "launch",
-      "name": "Launch File",
+      "name": "Launch file",
       "program": "${file}",
       "runtimeArgs": ["--experimental-modules"],
       "runtimeVersion": "12.3.1",
