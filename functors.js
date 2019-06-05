@@ -1,3 +1,5 @@
+'use strict'
+
 import curry from './curry.js'
 
 export function maybe (v) {
@@ -6,27 +8,37 @@ export function maybe (v) {
 
 export function just (v) {
   return Object.create(just.prototype, {
-    map: { value(f) { return just(f(v)) } },
-    valueOf: { value() { return v } }
+    fmap: { value(f) { return just(f(v)) } },
+    valueOf: { value() { return v } },
+    toString: { value() { return String(v) } },
+    join: {
+      value() {
+        let x
+        this.fmap(v => { x = v })
+        return maybe(x instanceof just ? this.join(x) : x)
+      }
+    }
   })
 }
 
 export function nothing () {
   return Object.create(nothing.prototype, {
-    map: { value() { return nothing() } },
-    valueOf: { value() { return null } }
+    fmap: { value() { return this /* nothing() */ } },
+    valueOf: { value() { return null } },
+    toString: { value() { return '' } },
+    join: { value() { return this } },
   })
 }
 
-export const fmap = curry( (f, v) => maybe(v).map(f) )
+export const fmap = curry( (f, v) => maybe(v).fmap(f) )
 
 /**
  * Unwrap nested functors
  * @param {maybe|just|nothing} functor A functor with map
  * @returns {maybe} A value wrapped in a functor
  */
-export function unwrap (functor) {
+export function join (functor) {
   let x
-  functor.map(v => { x = v })
-  return maybe(x instanceof just ? unwrap(x) : x)
+  functor.fmap(v => { x = v })
+  return maybe(x instanceof just ? join(x) : x)
 }

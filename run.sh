@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# test patterns
+# https://ss64.com/bash/test.html
+
 file=$1
 if [ -z $file ] || [ ! -f $file ]
 then
