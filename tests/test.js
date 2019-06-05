@@ -53,11 +53,12 @@ export function describe (description, f) {
     exception = e
 
     if (showError) {
-      console.error('↓', description) // ⚠
-      console.error(e)
+      log('  ', '↓', description) // ⚠
+      log('  ', e)
       showError = false
     } else {
-      console.warn('↑', description, '- Error(s) was thrown. See above for details.')
+      log.top('↓', description)
+      log.flush()
     }
   }
 }
