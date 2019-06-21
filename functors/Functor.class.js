@@ -1,3 +1,6 @@
+//debug info
+(globalThis || this || global).FILENAME = 'Functor.class.js'
+
 export class Functor {
   constructor (v) {
     this._v = v

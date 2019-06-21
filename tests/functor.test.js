@@ -4,6 +4,9 @@ import identity from '../identity.js'
 import { describe, it, assert, log } from './test.js'
 
 import { Functor, Maybe, Just, Nothing } from '../functors/Functor.object.js'
+// import { Functor, Maybe, Just, Nothing } from '../functors/Functor.class.js'
+
+console.log(FILENAME, '\r\n')
 
 describe('Functors must preserve identity morphisms', () => {
   // fmap id = id
@@ -30,18 +33,21 @@ describe('Functors have a type', () => {
   it('new Maybe', () => {
     const actual = new Maybe
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
-    // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
-    // assert.notOk(actual instanceof Just, 'a instanceof Just')
+    assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
+    assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
     printInstanceOf(actual)
+    log.flush()
   })
 
   it('new Maybe(21)', () => {
     const actual = new Maybe(21)
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
-    // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
+    assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.ok(actual instanceof Just, 'a instanceof Just')
-    // assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
+    assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
+    printInstanceOf(actual)
+    log.flush()
   })
 })
 
