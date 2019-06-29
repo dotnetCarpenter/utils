@@ -12,7 +12,8 @@ export default function fst (array) {
 }
 
 // test
-console.log(fst([]) === null)
+/*console.log(fst([]) === null)
 console.log(fst([,]) === null)
 console.log(fst([0]) === 0)
 console.log(fst([0,1]) === 0)
+*/
