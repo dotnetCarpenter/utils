@@ -42,6 +42,7 @@ export function describe (description, f) {
   Supported font symbols on Windows
   https://github.com/microsoft/terminal/issues/387
   */
+
   showError = true
 
   try {
