@@ -3,5 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  },
+  "scripts": { "test": "jasmine --config=__test__/support/jasmine.json" }
 }
