@@ -1,14 +1,13 @@
 'use strict'
 
 import identity from '../identity.js'
-import { describe, it, assert, log, showTree } from './test.js'
+import { describe, it, assert, log } from './test.js'
 import { maybe, Functor, Maybe, Just, Nothing } from '../functors/type.js'
 
 log('Testing type.js', '\r\n')
 
 describe('Functors have a type', () => {
   it('maybe', () => {
-//showTree()
     const actual = maybe()
     assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.notOk(actual instanceof Just, 'a instanceof Just')
@@ -34,18 +33,18 @@ describe('Functors must preserve identity morphisms', () => {
   assert.deepEqual(actual, expected, 'fmap id = id')
 })
 
-// describe('Functors preserve composition of morphisms', () => {
-//   // fmap (f . g)  ==  fmap f . fmap g')
-//   const expected = new maybe(42)
-//   const add1 = a => a + 1
-//   const minus2 = a => a - 2
+describe('Functors preserve composition of morphisms', () => {
+  // fmap (f . g)  ==  fmap f . fmap g')
+  const expected = new maybe(42)
+  const add1 = a => a + 1
+  const minus2 = a => a - 2
 
-//   let actual = new maybe(add1(minus2(43)))
-//   assert.deepEqual(actual, expected)
+  let actual = new maybe(add1(minus2(43)))
+  assert.deepEqual(actual, expected)
 
-//   actual = new maybe(43).fmap(add1).fmap(minus2)
-//   assert.deepEqual(actual, expected)
-// })
+  actual = new maybe(43).fmap(add1).fmap(minus2)
+  assert.deepEqual(actual, expected)
+})
 
 function printInstanceOf (a) {
   log(a instanceof Functor, 'a instanceof Functor')

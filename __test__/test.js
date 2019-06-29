@@ -9,7 +9,6 @@
 */
 
 import debounce from '../debounce.js'
-import lst from '../lst.js'
 
 import assert from 'assert'
 assert.notOk = (expression, message) => {
@@ -44,30 +43,73 @@ export let log = (function (olog) {
   }
 }(console.log))
 
-const tree = []
-let index = 0
-//let subIndex = 0
-//let isTreeBuild = false
-const doRun = debounce(() => { showTree(); run(tree); }, 16)
 
-let exception
-let showError = true
-export function showTree () {
+class TestLeaf {
+  constructor (description, f) {
+     this.description = description
+     this.f = f
+     this.waiting = true
+     this.status = false
+     this.error
+     this.parent
+  }
+}
+class TestNode extends TestLeaf {
+  constructor (description, f) {
+    super(description, f)
+
+    this.children = []
+    delete this.parent
+  }
+}
+
+const TIMEOUT = 16
+const tree = []
+let currentIndex = 0
+const doRun = debounce(() => { run(tree) }, TIMEOUT)
+const doneRunning = debounce(() => { showResults(tree, 0); log.flush() }, TIMEOUT)
+
+function showTree () {
   console.log(tree)
   console.log(JSON.stringify(tree))
 }
+
+function showResults (nodes, level) {
+  nodes.forEach(test => {
+    if (test.status) {
+      log('♥'.padStart(level), test.description) // ✓
+    } else {
+      log('↓'.padStart(level), test.description) // ⚠
+      if (test.error) log(test.error) // could be a child test who has the error
+    }
+
+    if (test.children) showResults(test.children, level + 4)
+  })
+}
+
 function run (nodes) {
   nodes.forEach((test, i) => {
-    index = i
+
+    currentIndex = i
+
     if (test.waiting) {
+
       try {
         test.f()
-      } catch (err) {}
+        test.status = true
+      } catch (err) {
+        test.status = false
+        test.error = err
+        if (test.parent) test.parent.status = false
+      }
+
       test.waiting = false
     }
 
     if (test.children) run(test.children)
   })
+
+  doneRunning()
 }
 
 function addTest (node, test) {
@@ -75,38 +117,14 @@ function addTest (node, test) {
 }
 
 export function it (description, f) {
-  addTest(tree[index].children, { description, f, waiting: true })
-  //addTest(lst(tree).children, { description, f, waiting: true })
-  //lst(tree).sub.push({ description, f })
-  //tree[index - 1].sub[subIndex++] = { description, f }
+  const test = new TestLeaf(description, f)
+  test.parent = tree[currentIndex]
+  addTest(test.parent.children, test)
+
   doRun()
 }
 export function describe (description, f) {
-  addTest(tree, { description, f, children: [], waiting: true })
-  //tree.push({ description, f, sub: [] })
-  //tree[index++] = { description, f, sub: [] }
-  //subIndex = 0
+  addTest(tree, new TestNode(description, f))
 
   doRun()
-/*
-  showError = true
-
-  try {
-    f()
-    if (exception) throw exception
-    log.top('♥', description) // ✓
-    log.flush()
-  } catch (e) {
-    exception = e
-
-    if (showError) {
-      log('  ', '↓', description) // ⚠
-      log('  ', e)
-      showError = false
-    } else {
-      log.top('↓', description)
-      log.flush()
-    }
-  }
-*/
 }
