@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 assert.notOk = (expression, message) => {
-  assert.equal(!!expression, message)
+  assert.ok(!expression, message)
 }
 export { assert }
 

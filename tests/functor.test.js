@@ -3,7 +3,8 @@
 import identity from '../identity.js'
 import { describe, it, assert, log } from './test.js'
 
-import { Functor, Maybe, Just, Nothing } from '../functors/Functor.object.js'
+// import { Functor, Maybe, Just, Nothing } from '../functors/Functor.object.js'
+import { Functor, Maybe, Just, Nothing } from '../functors/Functor.class.js'
 
 describe('Functors must preserve identity morphisms', () => {
   // fmap id = id
