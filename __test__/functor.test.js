@@ -32,7 +32,7 @@ describe('Functors have a type', () => {
     const actual = new Maybe
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
     // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
-    // assert.notOk(actual instanceof Just, 'a instanceof Just')
+    assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
     printInstanceOf(actual)
   })
@@ -42,7 +42,8 @@ describe('Functors have a type', () => {
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
     // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.ok(actual instanceof Just, 'a instanceof Just')
-    // assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
+    assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
+    printInstanceOf(actual)
   })
 })
 

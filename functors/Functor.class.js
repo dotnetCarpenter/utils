@@ -7,8 +7,6 @@ export class Functor {
 export class Maybe extends Functor {
   constructor (v) {
     return v instanceof Nothing || null == v ? new Nothing : new Just(v)
-    // functor.prototype = Maybe.prototype
-    // return functor
   }
 }
 
@@ -27,7 +25,6 @@ export class Just extends Functor {
 }
 
 export class Nothing extends Functor {
-  constructor () { super() }
   fmap () {
     return this
   }
