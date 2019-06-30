@@ -10,14 +10,14 @@ then
   exit 1
 fi
 
-## TODO: use random file name instead of .tmp so we don't overwrite by accident
+## TODO: check file name (.node-warnings) exist so we don't overwrite by accident
 
 # run
 ## --redirect-warnings hides "(node:10328) ExperimentalWarning: The ESM module loader is experimental."
-node --experimental-modules --redirect-warnings=".tmp" "$file"
+node --experimental-modules --redirect-warnings=".node-warnings" "$file"
 
 # clean up
-if [ -f "./.tmp" ]
+if [ -f "./.node-warnings" ]
 then
-  rm "./.tmp"
+  rm "./.node-warnings"
 fi

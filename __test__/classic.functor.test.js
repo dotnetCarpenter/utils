@@ -2,27 +2,29 @@
 
 import identity from '../identity.js'
 import { describe, it, assert, log } from './test.js'
-import { maybe, Functor, Maybe, Just, Nothing } from '../functors/type.js'
+import { maybe, Functor, Maybe, Just, Nothing } from '../functors/Functor.classic.js'
 
-log('Testing type.js', '\r\n')
+log('Functor.classic.js', '\r\n')
 
 describe('Functors have a type', () => {
-  it('maybe', () => {
+  it('maybe() is type of Functor, Maybe and Nothing but not Just', () => {
     const actual = maybe()
+    assert.ok(actual instanceof Functor, 'a instanceof Functor')
     assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 
-  it('maybe(21)', () => {
+  it('maybe(21) is type of Functor, Maybe and Just but not Nothing', () => {
     const actual = maybe(21)
+    assert.ok(actual instanceof Functor, 'a instanceof Functor')
     assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.ok(actual instanceof Just, 'a instanceof Just')
     assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 })
 

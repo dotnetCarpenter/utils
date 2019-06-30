@@ -9,6 +9,7 @@
 */
 
 import debounce from '../debounce.js'
+import each from '../each.js'
 
 import assert from 'assert'
 assert.notOk = (expression, message) => {
@@ -16,81 +17,82 @@ assert.notOk = (expression, message) => {
 }
 export { assert }
 
-
-export let log = (function (olog) {
-  const messages = []
-
-  keepMessages.flush = () => {
-    messages.forEach(x => {
-      Array.isArray(x) ? olog(...x) : olog(x)
-    })
-
-    keepMessages.clear()
-  }
-
-  keepMessages.top = (...msg) => {
-    messages.unshift(msg)
-  }
-
-  keepMessages.clear = () => {
-    messages.splice(0)
-  }
-
-  return keepMessages
-
-  function keepMessages (...msg) {
-    messages.push(msg)
-  }
-}(console.log))
-
-
-class TestLeaf {
+class AbstractTest {
   constructor (description, f) {
      this.description = description
      this.f = f
      this.waiting = true
      this.status = false
      this.error
-     this.parent
+     this.log = []
   }
 }
-class TestNode extends TestLeaf {
+
+class TestLeaf extends AbstractTest {
   constructor (description, f) {
     super(description, f)
+    this.parent
+ }
+}
 
+class TestNode extends AbstractTest {
+  constructor (description, f) {
+    super(description, f)
     this.children = []
-    delete this.parent
   }
 }
 
 const TIMEOUT = 16
 const tree = []
-let currentIndex = 0
+let currentNode
 const doRun = debounce(() => { run(tree) }, TIMEOUT)
-const doneRunning = debounce(() => { showResults(tree, 0); log.flush() }, TIMEOUT)
+const doneRunning = debounce(() => {
+  collectResults(tree)
+  // console.log(tree)
+  print(tree, log.get())
+}, TIMEOUT)
 
-function showTree () {
-  console.log(tree)
-  console.log(JSON.stringify(tree))
-}
-
-function showResults (nodes, level) {
+function collectResults (nodes, level = 0) {
   nodes.forEach(test => {
+    currentNode = test
+
     if (test.status) {
-      log('♥'.padStart(level), test.description) // ✓
+      test.log.unshift(`\u001b[31m${'♥'.padStart(level)}\u001b[0m ${test.description}`) // ✓
     } else {
-      log('↓'.padStart(level), test.description) // ⚠
+      test.log.unshift('↓'.padStart(level) + ' ' + test.description) // ⚠
       if (test.error) log(test.error) // could be a child test who has the error
     }
 
-    if (test.children) showResults(test.children, level + 4)
+    if (test.children) collectResults(test.children, level + 4)
   })
 }
 
-function run (nodes) {
-  nodes.forEach((test, i) => {
+function print (nodes, stringBuilder = []) {
+  console.log(collectStrings(nodes, stringBuilder).join('\r\n'))
+}
 
-    currentIndex = i
+function collectStrings (nodes, stringBuilder) {
+  if (nodes.length === 0) return stringBuilder
+
+  const test = nodes[0]
+  const tests = nodes.slice(1)
+
+  stringBuilder.push(...test.log)
+  if (test.children) {
+    stringBuilder = collectStrings(test.children, stringBuilder)
+  }
+
+  if (tests.length !== 0) {
+    stringBuilder = collectStrings(tests, stringBuilder)
+  }
+
+  return stringBuilder
+}
+
+function run (nodes) {
+  nodes.forEach(test => {
+
+    currentNode = test
 
     if (test.waiting) {
 
@@ -118,13 +120,51 @@ function addTest (node, test) {
 
 export function it (description, f) {
   const test = new TestLeaf(description, f)
-  test.parent = tree[currentIndex]
+  test.parent = currentNode
   addTest(test.parent.children, test)
 
   doRun()
 }
+
 export function describe (description, f) {
   addTest(tree, new TestNode(description, f))
 
   doRun()
 }
+
+export const log = (function log () {
+  const messages = []
+
+  function log (...msg) {
+    if (currentNode) currentNode.log.push(msg.join(' '))
+    else messages.push(msg.join(' '))
+  }
+  log.get = () => messages
+
+  return log
+}())
+// export let log = (function (olog) {
+//   const messages = []
+
+//   keepMessages.flush = () => {
+//     messages.forEach(x => {
+//       Array.isArray(x) ? olog(...x) : olog(x)
+//     })
+
+//     keepMessages.clear()
+//   }
+
+//   keepMessages.top = (...msg) => {
+//     messages.unshift(msg)
+//   }
+
+//   keepMessages.clear = () => {
+//     messages.splice(0)
+//   }
+
+//   return keepMessages
+
+//   function keepMessages (...msg) {
+//     messages.push(msg)
+//   }
+// }(console.log))
