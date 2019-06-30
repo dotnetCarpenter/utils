@@ -45,17 +45,41 @@ class TestNode extends AbstractTest {
 const TIMEOUT = 16
 const tree = []
 let currentNode
+let exitCode = 0
+
 const doRun = debounce(() => { run(tree) }, TIMEOUT)
 const doneRunning = debounce(() => {
   collectResults(tree)
   // console.log(tree)
   print(tree, log.get())
+  process.exit(exitCode)
 }, TIMEOUT)
 
-function collectResults (nodes, level = 0) {
-  nodes.forEach(test => {
-    currentNode = test
+function run (nodes) {
+  traverseTree(test => {
+    if (test.waiting) {
 
+      try {
+        test.f()
+        test.status = true
+      } catch (err) {
+        exitCode = 1
+        test.status = false
+        test.error = err
+        if (test.parent) test.parent.status = false
+      }
+
+      test.waiting = false
+    }
+
+    if (test.children) run(test.children)
+  }, nodes)
+
+  doneRunning()
+}
+
+function collectResults (nodes, level = 0) {
+  traverseTree(test => {
     if (test.status) {
       test.log.unshift(`\u001b[31m${'♥'.padStart(level)}\u001b[0m ${test.description}`) // ✓
     } else {
@@ -64,7 +88,14 @@ function collectResults (nodes, level = 0) {
     }
 
     if (test.children) collectResults(test.children, level + 4)
-  })
+  }, nodes)
+}
+
+function traverseTree (f, nodes) {
+  each(node => {
+    currentNode = node
+    f(node)
+  }, nodes)
 }
 
 function print (nodes, stringBuilder = []) {
@@ -89,33 +120,10 @@ function collectStrings (nodes, stringBuilder) {
   return stringBuilder
 }
 
-function run (nodes) {
-  nodes.forEach(test => {
+export function describe (description, f) {
+  addTest(tree, new TestNode(description, f))
 
-    currentNode = test
-
-    if (test.waiting) {
-
-      try {
-        test.f()
-        test.status = true
-      } catch (err) {
-        test.status = false
-        test.error = err
-        if (test.parent) test.parent.status = false
-      }
-
-      test.waiting = false
-    }
-
-    if (test.children) run(test.children)
-  })
-
-  doneRunning()
-}
-
-function addTest (node, test) {
-  node.push(test)
+  doRun()
 }
 
 export function it (description, f) {
@@ -126,10 +134,8 @@ export function it (description, f) {
   doRun()
 }
 
-export function describe (description, f) {
-  addTest(tree, new TestNode(description, f))
-
-  doRun()
+function addTest (node, test) {
+  node.push(test)
 }
 
 export const log = (function log () {

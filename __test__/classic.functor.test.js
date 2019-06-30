@@ -14,7 +14,7 @@ describe('Functors have a type', () => {
     assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
 
-    printInstanceOf(actual)
+    // printInstanceOf(actual)
   })
 
   it('maybe(21) is type of Functor, Maybe and Just but not Nothing', () => {
@@ -24,7 +24,7 @@ describe('Functors have a type', () => {
     assert.ok(actual instanceof Just, 'a instanceof Just')
     assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
 
-    printInstanceOf(actual)
+    // printInstanceOf(actual)
   })
 })
 
