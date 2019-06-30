@@ -79,12 +79,16 @@ function run (nodes) {
 }
 
 function collectResults (nodes, level = 0) {
+  const ident = ' '.repeat(level)
+
   traverseTree(test => {
     if (test.status) {
-      test.log.unshift(`\u001b[31m${'♥'.padStart(level)}\u001b[0m ${test.description}`) // ✓
+      test.log.unshift(`\u001b[31m${ident}♥\u001b[0m ${test.description}`) // ✓
     } else {
-      test.log.unshift('↓'.padStart(level) + ' ' + test.description) // ⚠
-      if (test.error) log(test.error) // could be a child test who has the error
+      test.log.unshift(ident + '↓ ' + test.description) // ⚠
+      if (test.error) { // test for error since it could be a child test who has the error
+        log(`\u001b[31m${ident}${test.error.toString()}\u001b[0m`)
+      }
     }
 
     if (test.children) collectResults(test.children, level + 4)

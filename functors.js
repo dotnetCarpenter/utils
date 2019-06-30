@@ -34,7 +34,7 @@ export const fmap = curry( (f, v) => maybe(v).fmap(f) )
 
 /**
  * Unwrap nested functors
- * @param {maybe|just|nothing} functor A functor with map
+ * @param {maybe|just|nothing} functor A functor with fmap
  * @returns {maybe} A value wrapped in a functor
  */
 export function join (functor) {
