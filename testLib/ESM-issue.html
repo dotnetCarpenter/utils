@@ -1,0 +1,18 @@
+<p>Posted here: http://disq.us/p/22sp4c1 (https://2ality.com/2019/04/nodejs-esm-impl.html)</p>
+
+<p>I am having trouble understanding how to <i>upgrade</i> CJS to ESM with the current implementation of ESM.</p>
+
+<p>
+Say we have bootstrap program that check if we are in a CJS or an ESM environment and then execute the real program with the proper node flags: https://github.com/dotnetCarpenter/utils/blob/a1b93ff9d8ff388cd038f22fbeaf804b8ceeab33/testLib/cli.js
+<i>In the <code>cli.js</code> example, the real program is <code>exec.js</code>.</i>
+</p>
+
+<p>
+The main issue, in the linked example, is that <code>import.meta.url</code> in a CJS environment will throw a <code>SyntaxError</code> but we need <code>import.meta.url</code> in order get the correct path to <code>exec.js</code>.
+</p>
+
+<p>
+The ESM equivalent to <code>execFile('node', path.resolve(__dirname, './exec.js'))</code> is <code>execFile('node', path.resolve(path.dirname(fileURLToPath(import.meta.url)), './exec.js'))</code>.
+</p>
+
+<p>Tested in node v12.3.1</p>
