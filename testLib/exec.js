@@ -20,10 +20,9 @@ const getFiles = filter(
 
 fs.readdir(
   path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', testDir),
-  { withFileTypes: true },
   (err, files) => {
     if (err) throw err
 
     const testFiles = getFiles(files)
-    ;
+    console.log(testFiles);
   })

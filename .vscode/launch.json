@@ -23,7 +23,7 @@
       "request": "launch",
       "name": "Node-Debug file",
       "program": "${file}",
-      "runtimeArgs": ["--experimental-modules"],
+      "runtimeArgs": ["--experimental-modules", "--experimental-json-modules"],
       "runtimeVersion": "12.3.1",
     }
   ]
