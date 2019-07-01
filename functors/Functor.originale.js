@@ -1,6 +1,6 @@
 'use strict'
 
-import curry from './curry.js'
+import curry from '../curry.js'
 
 export function maybe (v) {
   return v instanceof nothing || null == v ? nothing() : just(v)

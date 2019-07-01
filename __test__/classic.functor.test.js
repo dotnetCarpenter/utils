@@ -1,7 +1,7 @@
 'use strict'
 
 import identity from '../identity.js'
-import { describe, it, assert, log } from './test.js'
+import { describe, it, assert, log } from '../testLib/lib.js'
 import { maybe, Functor, Maybe, Just, Nothing } from '../functors/Functor.classic.js'
 
 log('Functor.classic.js', '\r\n')
@@ -37,14 +37,20 @@ describe('Functors must preserve identity morphisms', () => {
 
 describe('Functors preserve composition of morphisms', () => {
   // fmap (f . g)  ==  fmap f . fmap g')
-  const expected = new maybe(42)
+  const expected = maybe(42)
   const add1 = a => a + 1
   const minus2 = a => a - 2
 
-  let actual = new maybe(add1(minus2(43)))
+  let actual = maybe(add1(minus2(43)))
   assert.deepEqual(actual, expected)
 
-  actual = new maybe(43).fmap(add1).fmap(minus2)
+  actual = maybe(43).fmap(add1).fmap(minus2)
+  assert.deepEqual(actual, expected)
+})
+
+describe('fmap free function', () => {
+  const expected = maybe(4)
+  const actual = fmap(maybe(2), x => x + 2)
   assert.deepEqual(actual, expected)
 })
 

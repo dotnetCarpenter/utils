@@ -20,7 +20,7 @@ export class Just extends Functor {
   join () {
     let x
     this.fmap(v => { x = v })
-    return Maybe(x instanceof Just ? this.join(x) : x)
+    return new Maybe(x instanceof Just ? this.join(x) : x)
   }
 }
 

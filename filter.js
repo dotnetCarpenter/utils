@@ -1,5 +1,5 @@
-import each from './each'
-import curry from './curry'
+import each from './each.js'
+import curry from './curry.js'
 
 function filter (f, array) {
   const a = []

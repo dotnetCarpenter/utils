@@ -1,7 +1,7 @@
 'use strict'
 
 import identity from '../identity.js'
-import { describe, it, assert, log } from './test.js'
+import { describe, it, assert, log } from '../testLib/lib.js'
 
 import { Functor, Maybe, Just, Nothing } from '../functors/Functor.object.js'
 //import { Functor, Maybe, Just, Nothing } from '../functors/Functor.class.js'
