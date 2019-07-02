@@ -9,7 +9,7 @@
  * const add2 = curry(x => x + 2, 2)
  * const add5 = add2(3)
  * add5(5)
- * @returns {function}
+ * @returns {function} f
  */
 export default function curry (f, arity) {
   let n = arity || f.length
