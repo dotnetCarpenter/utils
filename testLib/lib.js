@@ -11,6 +11,10 @@
 import debounce from '../debounce.js'
 import each from '../each.js'
 
+import child_process from 'child_process'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
 import assert from 'assert'
 assert.notOk = (expression, message) => {
   assert.ok(!expression, message)
@@ -47,7 +51,7 @@ const tree = []
 let currentNode
 let exitCode = 0
 
-const doRun = debounce(() => { run(tree) }, TIMEOUT)
+const doTest = debounce(() => { test(tree) }, TIMEOUT)
 const doneRunning = debounce(() => {
   collectResults(tree)
   // console.log(tree)
@@ -55,24 +59,24 @@ const doneRunning = debounce(() => {
   process.exit(exitCode)
 }, TIMEOUT)
 
-function run (nodes) {
-  traverseTree(test => {
-    if (test.waiting) {
+function test (nodes) {
+  breadthFirst(testNode => {
+    if (testNode.waiting) {
 
       try {
-        test.f()
-        test.status = true
+        testNode.f()
+        testNode.status = true
       } catch (err) {
         exitCode = 1
-        test.status = false
-        test.error = err
-        if (test.parent) test.parent.status = false
+        testNode.status = false
+        testNode.error = err
+        if (testNode.parent) testNode.parent.status = false
       }
 
-      test.waiting = false
+      testNode.waiting = false
     }
 
-    if (test.children) run(test.children)
+    if (testNode.children) test(testNode.children)
   }, nodes)
 
   doneRunning()
@@ -81,21 +85,21 @@ function run (nodes) {
 function collectResults (nodes, level = 0) {
   const ident = ' '.repeat(level)
 
-  traverseTree(test => {
-    if (test.status) {
-      test.log.unshift(`\u001b[31m${ident}♥\u001b[0m ${test.description}`) // ✓
+  breadthFirst(testNode => {
+    if (testNode.status) {
+      testNode.log.unshift(`\u001b[31m${ident}♥\u001b[0m ${testNode.description}`) // ✓
     } else {
-      test.log.unshift(ident + '↓ ' + test.description) // ⚠
-      if (test.error) { // test for error since it could be a child test who has the error
-        log(`\u001b[31m${ident}${test.error.toString()}\u001b[0m`)
+      testNode.log.unshift(ident + '↓ ' + testNode.description) // ⚠
+      if (testNode.error) { // test for error since it could be a child test who has the error
+        log(`\u001b[31m${ident}${testNode.error.toString()}\u001b[0m`)
       }
     }
 
-    if (test.children) collectResults(test.children, level + 4)
+    if (testNode.children) collectResults(testNode.children, level + 4)
   }, nodes)
 }
 
-function traverseTree (f, nodes) {
+function breadthFirst (f, nodes) {
   each(node => {
     currentNode = node
     f(node)
@@ -127,7 +131,7 @@ function collectStrings (nodes, stringBuilder) {
 export function describe (description, f) {
   addTest(tree, new TestNode(description, f))
 
-  doRun()
+  doTest()
 }
 
 export function it (description, f) {
@@ -135,7 +139,7 @@ export function it (description, f) {
   test.parent = currentNode
   addTest(test.parent.children, test)
 
-  doRun()
+  doTest()
 }
 
 function addTest (node, test) {
@@ -178,3 +182,26 @@ export const log = (function log () {
 //     messages.push(msg)
 //   }
 // }(console.log))
+
+export function run (testFile) {
+  const promise = new Promise((resolve, reject) => {
+    child_process.execFile(
+      'node',
+      [
+        '--experimental-modules',
+        '--experimental-json-modules',
+        '--redirect-warnings=/dev/null',
+        testFile
+      ],
+      (err, stdout, stderr) => {
+        // if(err) {
+        //   reject(stdout || stderr)
+        // } else {
+          resolve(stdout || stderr)
+        // }
+      })
+  })
+  promise.catch(process.stderr.write.bind(process.stderr))
+
+  return promise
+}

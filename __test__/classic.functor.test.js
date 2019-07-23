@@ -2,6 +2,7 @@
 
 import identity from '../identity.js'
 import { describe, it, assert, log } from '../testLib/lib.js'
+
 import { maybe, Functor, Maybe, Just, Nothing } from '../functors/Functor.classic.js'
 
 log('Functor.classic.js', '\r\n')

@@ -9,6 +9,7 @@ module.exports.start = function start () {
     [
       '--experimental-modules',
       '--experimental-json-modules',
+      '--redirect-warnings=/dev/null',
       path.resolve(__dirname, './exec.js')],
     console.error)
 }
