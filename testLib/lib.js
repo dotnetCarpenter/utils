@@ -12,8 +12,6 @@ import debounce from '../debounce.js'
 import each from '../each.js'
 
 import child_process from 'child_process'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
 import assert from 'assert'
 assert.notOk = (expression, message) => {
@@ -54,7 +52,7 @@ let exitCode = 0
 const doTest = debounce(() => { test(tree) }, TIMEOUT)
 const doneRunning = debounce(() => {
   collectResults(tree)
-  // console.log(tree)
+// console.log(tree)
   print(tree, log.get())
   process.exit(exitCode)
 }, TIMEOUT)
@@ -157,33 +155,8 @@ export const log = (function log () {
 
   return log
 }())
-// export let log = (function (olog) {
-//   const messages = []
 
-//   keepMessages.flush = () => {
-//     messages.forEach(x => {
-//       Array.isArray(x) ? olog(...x) : olog(x)
-//     })
-
-//     keepMessages.clear()
-//   }
-
-//   keepMessages.top = (...msg) => {
-//     messages.unshift(msg)
-//   }
-
-//   keepMessages.clear = () => {
-//     messages.splice(0)
-//   }
-
-//   return keepMessages
-
-//   function keepMessages (...msg) {
-//     messages.push(msg)
-//   }
-// }(console.log))
-
-export function run (testFile) {
+export function run (testFile, stopSpecOnExpectationFailure = false) {
   const promise = new Promise((resolve, reject) => {
     child_process.execFile(
       'node',
@@ -193,12 +166,13 @@ export function run (testFile) {
         '--redirect-warnings=/dev/null',
         testFile
       ],
-      (err, stdout, stderr) => {
-        // if(err) {
-        //   reject(stdout || stderr)
-        // } else {
+      (error, stdout, stderr) => {
+        if (stopSpecOnExpectationFailure && error) {
+          reject(stderr || stdout)
+        } else {
+          // always resolve if all test has to run
           resolve(stdout || stderr)
-        // }
+        }
       })
   })
   promise.catch(process.stderr.write.bind(process.stderr))

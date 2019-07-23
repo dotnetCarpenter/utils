@@ -15,6 +15,7 @@ import each from '../each.js';
 /*** @type {number} */
 const CPU_COUNT = os.cpus().length
 const testDir = config.spec_dir
+const stopSpecOnExpectationFailure = config.stopSpecOnExpectationFailure
 
 /** @type {string} */
 const testFileMatchers = config.spec_files
@@ -31,21 +32,27 @@ const runConcurrent = (files) => {
   for (let c = 0, max = Math.min(CPU_COUNT, files.length); c < max; c++) {
     const filePath = path.resolve(absoluteTestDirPath, files[c])
     filePaths.push(filePath)
-    running.push(run(filePath))
+    running.push(run(filePath, stopSpecOnExpectationFailure))
   }
 
+  // FIXME: Since lib.js write to console, which is the same shell
+  // The output is duplicated - change lib.js to return strings, instead
+  // of writing to stdout via console.log
   Promise.all(running)
     .then(tests => {
       const remainingFiles = files.slice(CPU_COUNT)
-      each((testOutput, i)=> {
-        console.log(
-          `${filePaths[i]}:
-          ${testOutput}`
-        )
+
+      each((testOutput, i) => {
+        console.log(filePaths[i], testOutput, '\r\n')
       }, tests)
+
       if (remainingFiles.length) {
         runConcurrent(remainingFiles)
       }
+    })
+    .catch(failedTestFile => {
+      console.error(failedTestFile)
+      process.exit(1)
     })
 }
 /*** @type {function} */
