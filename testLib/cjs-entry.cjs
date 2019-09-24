@@ -2,14 +2,14 @@
 
 const { execFile } = require('child_process')
 const path = require('path')
+const { runtimeArgs } = require('./testConfig.json')
+
+// append exec.js to node flags
+runtimeArgs.push(path.resolve(__dirname, './exec.js'))
 
 module.exports.start = function start () {
   execFile(
     'node',
-    [
-      '--experimental-modules',
-      '--experimental-json-modules',
-      '--redirect-warnings=/dev/null',
-      path.resolve(__dirname, './exec.js')],
+    runtimeArgs,
     console.error)
 }

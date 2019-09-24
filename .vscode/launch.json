@@ -21,8 +21,8 @@
       "request": "launch",
       "name": "Node-exprim file",
       "program": "${file}",
-      "runtimeArgs": ["--experimental-modules", "--experimental-json-modules"],
-      "runtimeVersion": "12.3.1",
+      "runtimeArgs": ["--experimental-modules"/* , "--experimental-json-modules" */],
+      "runtimeVersion": "12.10.0",
     },
     {
       "type": "bashdb",

@@ -8,6 +8,8 @@
   https://github.com/microsoft/terminal/issues/387
 */
 
+import config from './testConfig.json'
+
 import debounce from '../debounce.js'
 import each from '../each.js'
 
@@ -18,6 +20,8 @@ assert.notOk = (expression, message) => {
   assert.ok(!expression, message)
 }
 export { assert }
+
+const { runtimeArgs } = config
 
 class AbstractTest {
   constructor (description, f) {
@@ -160,12 +164,7 @@ export function run (testFile, stopSpecOnExpectationFailure = false) {
   const promise = new Promise((resolve, reject) => {
     child_process.execFile(
       'node',
-      [
-        '--experimental-modules',
-        '--experimental-json-modules',
-        '--redirect-warnings=/dev/null',
-        testFile
-      ],
+      runtimeArgs.concat([testFile]), // append testFile to node flags
       (error, stdout, stderr) => {
         if (stopSpecOnExpectationFailure && error) {
           reject(stderr || stdout)
