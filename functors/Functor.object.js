@@ -17,17 +17,24 @@ export function Functor (v) {
 }
 
 export function Maybe (v) {
-  return v instanceof Nothing || null == v ? Nothing() : Just(v)
+  // return v instanceof Nothing || null == v ? Nothing() : Just(v)
+  const functor = v instanceof Nothing || null == v ? Nothing() : Just(v)
+  functor.__proto__.__proto__ = Object.create(Maybe.prototype)
+  return functor
 }
 
 export function Just (v) {
-  return Object.create(Functor(v))
+  const functor = Object.create(Functor(v))
+  functor.constructor = Just
+  return functor
 }
 
 export function Nothing () {
-  return Object.create(Functor(), {
+  const functor = Object.create(Functor(), {
     fmap: {
       value () { return this }
     }
   })
+  functor.constructor = Nothing
+  return functor
 }

@@ -5,7 +5,7 @@ import { describe, it, assert, log } from '../testLib/lib.js'
 
 import { maybe, just, nothing, fmap, join } from '../functors/Functor.originale.js'
 
-log('Functor.originale.js', '\r\n')
+log('- Test Functor.originale.js', '\r\n')
 
 describe('Functors have a type', () => {
   it('maybe() is of type nothing but not just', () => {
@@ -13,7 +13,7 @@ describe('Functors have a type', () => {
     assert.notOk(actual instanceof just, 'a instanceof just')
     assert.ok(actual instanceof nothing, 'a instanceof nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 
   it('maybe(21) is of type just but not nothing', () => {
@@ -21,7 +21,7 @@ describe('Functors have a type', () => {
     assert.ok(actual instanceof just, 'a instanceof just')
     assert.notOk(actual instanceof nothing, 'a instanceof nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 })
 
@@ -44,3 +44,10 @@ describe('Functors preserve composition of morphisms', () => {
   actual = maybe(43).fmap(add1).fmap(minus2)
   assert.deepEqual(actual, expected)
 })
+
+
+function printInstanceOf (a) {
+  log(a instanceof maybe, 'a instanceof maybe')
+  log(a instanceof just, 'a instanceof just')
+  log(a instanceof nothing, 'a instanceof nothing')
+}

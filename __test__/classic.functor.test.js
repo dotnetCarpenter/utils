@@ -3,9 +3,9 @@
 import identity from '../identity.js'
 import { describe, it, assert, log } from '../testLib/lib.js'
 
-import { maybe, Functor, Maybe, Just, Nothing } from '../functors/Functor.classic.js'
+import { fmap, maybe, Functor, Maybe, Just, Nothing } from '../functors/Functor.classic.js'
 
-log('Functor.classic.js', '\r\n')
+log('- Testing Functor.classic.js', '\r\n')
 
 describe('Functors have a type', () => {
   it('maybe() is type of Functor, Maybe and Nothing but not Just', () => {
@@ -15,7 +15,7 @@ describe('Functors have a type', () => {
     assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 
   it('maybe(21) is type of Functor, Maybe and Just but not Nothing', () => {
@@ -25,7 +25,7 @@ describe('Functors have a type', () => {
     assert.ok(actual instanceof Just, 'a instanceof Just')
     assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
 
-    // printInstanceOf(actual)
+    printInstanceOf(actual)
   })
 })
 

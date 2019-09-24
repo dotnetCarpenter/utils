@@ -3,7 +3,9 @@
 import curry from '../curry.js'
 
 export function maybe (v) {
-  return v instanceof nothing || null == v ? nothing() : just(v)
+  const functor = v instanceof nothing || null == v ? nothing() : just(v)
+  functor.__proto__.__proto__ = Object.create(maybe.prototype)
+  return functor
 }
 
 export function just (v) {

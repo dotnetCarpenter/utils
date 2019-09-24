@@ -5,7 +5,7 @@ import { describe, it, assert, log } from '../testLib/lib.js'
 
 import { Functor, Maybe, Just, Nothing } from '../functors/Functor.class.js'
 
-log('Functor.class.js', '\r\n')
+log('- Testing Functor.class.js', '\r\n')
 
 describe('Functors must preserve identity morphisms', () => {
   // fmap id = id
@@ -32,7 +32,7 @@ describe('Functors have a type', () => {
   it('new Maybe', () => {
     const actual = new Maybe
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
-    // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
+    assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.notOk(actual instanceof Just, 'a instanceof Just')
     assert.ok(actual instanceof Nothing, 'a instanceof Nothing')
     printInstanceOf(actual)
@@ -41,7 +41,7 @@ describe('Functors have a type', () => {
   it('new Maybe(21)', () => {
     const actual = new Maybe(21)
     assert.ok(actual instanceof Functor, 'a instanceof Functor')
-    // assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
+    assert.ok(actual instanceof Maybe, 'a instanceof Maybe')
     assert.ok(actual instanceof Just, 'a instanceof Just')
     assert.notOk(actual instanceof Nothing, 'a instanceof Nothing')
     printInstanceOf(actual)

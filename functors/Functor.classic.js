@@ -3,9 +3,7 @@
 export function Functor () {}
 Functor.prototype.fmap = function () { return this }
 
-export function Maybe (v) {
-
-}
+export function Maybe (v) {}
 Maybe.prototype = new Functor
 
 export function Just (v) {
@@ -23,6 +21,6 @@ export function maybe (v) {
   return v instanceof Nothing || v == null ? new Nothing : new Just(v)
 }
 
-// export function fmap (functor, f) {
-//   return new Reflect.getPrototypeOf(functor)(functor.fmap(f))
-// }
+export function fmap (functor, f) {
+  return functor.fmap(f)
+}
