@@ -11,5 +11,8 @@ module.exports.start = function start () {
   execFile(
     'node',
     runtimeArgs,
-    console.error)
+    (error, textOutput) => {
+      console.log(textOutput)
+      if (error) console.error(error)
+    })
 }
