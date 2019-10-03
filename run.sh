@@ -17,7 +17,7 @@ failure="\r\n $file execution failed!"
 
 # run
 ## --redirect-warnings hides "(node:10328) ExperimentalWarning: The ESM module loader is experimental."
-node --experimental-modules --experimental-json-modules --redirect-warnings=".node-warnings" "$file" && echo "$success" || echo "$failure"
+node --experimental-modules --redirect-warnings=".node-warnings" "$file" && echo "$success" || echo "$failure"
 
 # clean up
 if [ -f "./.node-warnings" ]
