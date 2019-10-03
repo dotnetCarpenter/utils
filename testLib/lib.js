@@ -1,7 +1,7 @@
 'use strict'
 
 /*
-  I use font symbols to mark successfull/unsuccessfull
+  I use font symbols to mark successful/unsuccessful
   tests. But the default Windows terminal only support
   a few characters. See below for more info.
   Supported font symbols on Windows
@@ -93,7 +93,7 @@ function collectResults (nodes, level = 0) {
     } else {
       testNode.log.unshift(ident + '↓ ' + testNode.description) // ⚠
       if (testNode.error) { // test for error since it could be a child test who has the error
-        log(`\u001b[31m${ident}${testNode.error.toString()}\u001b[0m`)
+        log(`\u001b[31m${ident}⚠ ${testNode.error.toString()}\u001b[0m`)
       }
     }
 
