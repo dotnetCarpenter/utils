@@ -4,9 +4,19 @@ export class Functor {
   }
 }
 
-export class Maybe extends Functor {
+export class Maybe {
   constructor (v) {
-    return v instanceof Nothing || null == v ? new Nothing : new Just(v)
+    const functor = v instanceof Nothing || null == v ? new Nothing : new Just(v)
+    // console.log("**********************")
+    // console.dir(functor)
+    // console.dir(functor.__proto__)
+    // console.dir(functor.__proto__.__proto__)
+    // console.dir(functor.__proto__.__proto__.__proto__)
+    // console.log("**********************")
+
+    functor.__proto__.__proto__ = Object.create(Maybe.prototype)
+    return functor
+    // return v instanceof Nothing || null == v ? new Nothing : new Just(v)
   }
 }
 
