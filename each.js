@@ -1,8 +1,12 @@
+//@ts-check
+'use strict'
+
 /**
  * Like array.forEach but faster and easier to use in
  * functional programming, due to the argument order.
  * @param {function} f
- * @param {[]} array
+ * @param {any[]} array
+ * @returns {void}
  */
 function each (f, array) {
   for (let n = 0, max = array.length; n < max; n++) {
