@@ -13,7 +13,7 @@ describe('stubAPI.nothing()', () => {
   })
 })
 
-describe('stubAPI.items()', () => {
+describe('stubAPI.itemsForSure()', () => {
   it('is an array it must be between 0 and 10 inclusive', () => {
     const expected = val => val.length >= 0 && val.length <= 10
     const actual = API.itemsForSure()
