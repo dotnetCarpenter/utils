@@ -6,7 +6,7 @@ import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import config from './testConfig.json'
-import { run } from './lib.js'
+import { execFile } from './lib.js'
 import filter from '../filter.js'
 import map from '../map.js'
 import identity from '../identity.js'
@@ -55,7 +55,7 @@ const runConcurrent = (relativeFilePaths) => {
   for (let c = 0, max = Math.min(CPU_COUNT, relativeFilePaths.length); c < max; c++) {
     const filePath = path.resolve(absoluteTestDirPath, relativeFilePaths[c])
     filePaths.push(filePath)
-    running.push(run(filePath, stopSpecOnExpectationFailure))
+    running.push(execFile(filePath, stopSpecOnExpectationFailure))
   }
 
   // FIXME: Since lib.js write to console, which is the same shell
