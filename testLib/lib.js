@@ -1,3 +1,4 @@
+//@ts-check
 'use strict'
 
 /*
@@ -29,7 +30,7 @@ class AbstractTest {
      this.f = f
      this.waiting = true
      this.status = false
-     this.error
+     this.error = undefined
      this.log = []
   }
 }
@@ -37,7 +38,7 @@ class AbstractTest {
 class TestLeaf extends AbstractTest {
   constructor (description, f) {
     super(description, f)
-    this.parent
+    this.parent = {}
  }
 }
 
@@ -136,6 +137,12 @@ export function describe (description, f) {
   doTest()
 }
 
+/**
+ *
+ * @param {string} description
+ * @param {function} f
+ * @returns {void}
+ */
 export function it (description, f) {
   const test = new TestLeaf(description, f)
   test.parent = currentNode
@@ -147,6 +154,14 @@ export function it (description, f) {
 function addTest (node, test) {
   node.push(test)
 }
+
+/**
+ * Disable the `it` function.
+ * @param {string} description
+ * @param {function} f
+ * @returns {void}
+ */
+export const xit = (description, f) => {}
 
 export const log = (function log () {
   const messages = []
@@ -160,11 +175,24 @@ export const log = (function log () {
   return log
 }())
 
-export function run (testFile, stopSpecOnExpectationFailure = false) {
+/**
+ * Execute a test file and resolve/reject the returned Promise depending on
+ * success or failure of the tests in that file.
+ * @param {string} testFilePath
+ * @param {boolean} stopSpecOnExpectationFailure
+ * @returns {promise} A Promise which will resolve/reject with the terminal
+ * output as a string.
+ */
+export function execFile (testFilePath, stopSpecOnExpectationFailure = false) {
   const promise = new Promise((resolve, reject) => {
     child_process.execFile(
       'node',
-      runtimeArgs.concat([testFile]), // append testFile to node flags
+      runtimeArgs.concat([testFilePath]), // append testFilePath to node flags
+      /**
+       * @param {Error} error
+       * @param {string} stdout
+       * @param {string} stderr
+       */
       (error, stdout, stderr) => {
         if (stopSpecOnExpectationFailure && error) {
           reject(stderr || stdout)
