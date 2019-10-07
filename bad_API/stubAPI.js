@@ -13,12 +13,15 @@ const nothing = () => void(0)
 const maybeItems = ifElse(chance, randomCharArray, nothing)
 
 export default {
+  /** @returns {string[] | null}  */
   items () {
     return maybeItems()
   },
+  /** @returns {string[]}  */
   itemsForSure () {
     return randomCharArray()
   },
+  /** @returns {null}  */
   nothing () {
     return nothing()
   },
