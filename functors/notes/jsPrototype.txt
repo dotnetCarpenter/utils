@@ -1,0 +1,89 @@
+```js
+const JustKind = Object.create(just.prototype, {
+	fmap: { value(f) { return just(f(v)) } },
+	valueOf: { value() { return v } }
+})
+Object.setPrototypeOf(JustKind.__proto__, maybe.prototype)
+Object.setPrototypeOf(JustKind.__proto__.__proto__, functor.prototype)
+```
+
+JustKind.__proto__ -> <maybe> -> <functor> -> <Object>
+
+JustKind.__proto__ -> <maybe>.__proto__ -> <functor>.__proto__ -> <Object>
+
+
+JustKind.__proto__.constructor -> <just> -> <maybe> -> <functor> -> <Object>
+
+JustKind.__proto__.constructor -> <just>.prototype -> <maybe>.__proto__ -> <functor>.__proto__ -> <Object>.__proto__ -> null
+
+<just> {
+	__proto__: <maybe>,
+	fmap,
+	valueOf
+}
+
+constructor: function just {
+	name: 'just',
+	prototype: <maybe>,
+	__proto__: <Function>
+}
+
+<maybe> {
+	constructor: function just,
+	__proto__: <functor>
+}
+
+constructor: function maybe {
+	name: 'maybe',
+	prototype: <functor>,
+	__proto__: <Function>
+}
+
+<functor> {
+	constructor: function maybe,
+	__proto__: {
+		constructor: function functor,
+		__proto__: <Object>
+	}
+}
+
+constructor: function functor {
+	name: 'functor',
+	prototype: {
+		constructor: function functor,
+		__proto__: <Object>
+	},
+	__proto__: <Function>
+}
+
+<Object> {
+	constructor: function Object,
+	__proto__: null,
+	hasOwnProperty (),
+	isPrototypeOf,
+	...
+}
+
+constructor: function Object {
+	name: 'Object',
+	prototype: <Object>,
+	__proto__: <Function>,
+	assign,
+	create,
+	...
+}
+
+<Function> {
+	name: '',
+	constructor: function Function,
+	__proto__: <Object>,
+	apply,
+	bind,
+	...
+}
+
+constructor: function Function {
+	name: 'Function',
+	prototype: <Function>,
+	__proto__: <Function>
+}

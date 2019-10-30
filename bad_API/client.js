@@ -5,7 +5,7 @@ import API from './stubAPI.js'
 import map from '../map.js'
 import { maybe, nothing } from '../functors.js'
 
-const ILLIGAL_CHARS = []
+const ILLEGAL_CHARS = []
 
 main()
 
@@ -29,7 +29,6 @@ function withFunctor () {
 
   if (message instanceof nothing) return ['API.items() returned nothing',]
 
-  /** @type {string} */
   let chars
   message.fmap(/** @param {string[]} message */ message => {
     chars = message.join()
