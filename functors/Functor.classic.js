@@ -3,7 +3,7 @@
 export function Functor () {}
 Functor.prototype.fmap = function () { return this }
 
-export function Maybe (v) {}
+export function Maybe () {}
 Maybe.prototype = new Functor
 
 export function Just (v) {

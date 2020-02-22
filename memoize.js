@@ -3,7 +3,7 @@ export default function memoize (f) {
   return argument => {
     let hit = cache.get(argument)
 
-    if (!hit) {
+    if (hit === undefined) {
       hit = f(argument)
       cache.set(argument, hit)
     }
